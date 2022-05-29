@@ -1,27 +1,39 @@
 function ListNode(val, next) {
     this.val = (val === undefined ? 0 : val);
-    this.next = (next === undefined ? null : val);
+    this.next = (next === undefined ? null : next);
 }
 
 let mergeKLists = (lists) => {
-    console.log(JSON.stringify(lists));
-    if (lists.length === 1) return lists[0];
-    else if (lists.length === 0) return null;
-    let lowest = lists[0];
-    let unsortedList = [];
+    console.log(lists);
+    if (!lists.length) return null;
+
+    let lowest = lists.shift();
+    let unsorted = [];
     while (lists.length > 0) {
         let node = lists.shift();
-        if (node) {
+        console.log(`Node: ${node}`);
+        if (node !== null) {
             if (node.val < lowest.val) {
-                lowest = node.val;
+                unsorted.push(lowest);
+                lowest = node;
+            } else {
+                unsorted.push(node);
             }
-            unsortedList.push(node);
         }
-        console.log(lowest);
     }
-    lowest = lowest.next;
-    console.log(unsortedList);
-    return new ListNode(lowest.val, mergeKLists(lists));
+    return new ListNode(lowest.val, mergeKLists([lowest.next, ...unsorted]));
 }
-
-console.log(mergeKLists([{ "val": 1, "next": { "val": 4, "next": { "val": 5, "next": null } } }, { "val": 1, "next": { "val": 3, "next": { "val": 4, "next": null } } }, { "val": 2, "next": { "val": 6, "next": null } }]))
+function generateNodesFromList(list) {
+    let array = [];
+    while (list.length > 0) {
+        let node = generateNodes(list.shift());
+        array.push(node);
+    }
+    return array;
+}
+function generateNodes(list) {
+    if (!list.length) return null;
+    return new ListNode(list.shift(), generateNodes(list));
+}
+let test1 = generateNodesFromList([[1, 4, 5], [1, 3, 4], [2, 6]])
+console.log(mergeKLists(test1));
