@@ -4,16 +4,14 @@ function ListNode(val, next) {
 }
 
 let mergeKLists = (lists) => {
-    console.log(lists);
     if (!lists.length) return null;
-
+    if (lists.length === 1) return lists[0];
     let lowest = lists.shift();
     let unsorted = [];
     while (lists.length > 0) {
         let node = lists.shift();
-        console.log(`Node: ${node}`);
-        if (node !== null) {
-            if (node.val < lowest.val) {
+        if (node !== undefined && node !== null) {
+            if (lowest === null || node.val < lowest.val) {
                 unsorted.push(lowest);
                 lowest = node;
             } else {
@@ -21,8 +19,11 @@ let mergeKLists = (lists) => {
             }
         }
     }
-    return new ListNode(lowest.val, mergeKLists([lowest.next, ...unsorted]));
+    if (lowest === null) return null;
+    if (lowest?.next) unsorted.push(lowest.next); 
+    return new ListNode(lowest?.val === undefined ? null : lowest.val, mergeKLists(unsorted));
 }
+
 function generateNodesFromList(list) {
     let array = [];
     while (list.length > 0) {
@@ -35,5 +36,17 @@ function generateNodes(list) {
     if (!list.length) return null;
     return new ListNode(list.shift(), generateNodes(list));
 }
-let test1 = generateNodesFromList([[1, 4, 5], [1, 3, 4], [2, 6]])
-console.log(mergeKLists(test1));
+let test1 = generateNodesFromList([[1, 4, 5], [1, 3, 4], [2, 6]]);
+let test2 = generateNodesFromList([[]]);
+let test3 = generateNodesFromList([[], []]);
+let test4 = generateNodesFromList([[], [1]]);
+let test5 = generateNodesFromList([[1], [0]]);
+let test6 = generateNodesFromList([[2], [], [-1]]);
+let test7 = generateNodesFromList([]);
+console.log(JSON.stringify(mergeKLists(test1), null, 2));
+console.log(mergeKLists(test2));
+console.log(mergeKLists(test3));
+console.log(mergeKLists(test4));
+console.log(mergeKLists(test5));
+console.log(mergeKLists(test6));
+console.log(mergeKLists(test7));
