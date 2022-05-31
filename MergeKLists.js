@@ -3,27 +3,54 @@ function ListNode(val, next) {
     this.next = (next === undefined ? null : next);
 }
 
+// let mergeKLists = (lists) => {
+//     if (!lists.length) return null;
+//     if (lists.length === 1) return lists[0];
+//     let lowest = lists.shift();
+//     let unsorted = [];
+//     while (lists.length > 0) {
+//         let node = lists.shift();
+//         if (node !== undefined && node !== null) {
+//             if (lowest === null || node.val < lowest.val) {
+//                 unsorted.push(lowest);
+//                 lowest = node;
+//             } else {
+//                 unsorted.push(node);
+//             }
+//         }
+//     }
+//     if (lowest === null) return null;
+//     if (lowest?.next) unsorted.push(lowest.next); 
+//     return new ListNode(lowest?.val === undefined ? null : lowest.val, mergeKLists(unsorted));
+// }
+
 let mergeKLists = (lists) => {
-    if (!lists.length) return null;
+    if (lists.length === 0) return null;
     if (lists.length === 1) return lists[0];
-    let lowest = lists.shift();
-    let unsorted = [];
-    while (lists.length > 0) {
-        let node = lists.shift();
-        if (node !== undefined && node !== null) {
-            if (lowest === null || node.val < lowest.val) {
-                unsorted.push(lowest);
-                lowest = node;
-            } else {
-                unsorted.push(node);
-            }
+    let mergedLists = [];
+    for (let i = 0; i < lists.length; i += 2) {
+        if (i + 1 === lists.length) mergedLists.push(lists[i])
+        else {
+            mergedLists.push(mergeTwoLists(lists[i], lists[i+1]));
         }
     }
-    if (lowest === null) return null;
-    if (lowest?.next) unsorted.push(lowest.next); 
-    return new ListNode(lowest?.val === undefined ? null : lowest.val, mergeKLists(unsorted));
+    return mergeKLists(mergedLists);
 }
 
+function mergeTwoLists(a, b) {
+    if (!a) return b;
+    else if (!b) return a;
+
+    if (a.val < b.val) {
+        value = a.val;
+        a = a.next;
+    } else {
+        value = b.val;
+        b = b.next;
+    }
+
+    return new ListNode(value, mergeTwoLists(a, b));
+}
 function generateNodesFromList(list) {
     let array = [];
     while (list.length > 0) {
