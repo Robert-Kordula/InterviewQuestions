@@ -19,10 +19,16 @@
 // }
 
 let search = function(nums, target) {
-    let n = nums.length;
-    let pivot = findPivot(nums, 0, n - 1);
+    let n = nums.length - 1;
+    let pivot = findPivot(nums, 0, n);
 
-    if (pivot === - 1) return binarySearch()
+    if (pivot === -1) return binarySearch(nums, 0, n, target);
+
+    if (target === nums[pivot]) return pivot;
+
+    if (nums[0] <= target) return binarySearch(nums, 0, pivot - 1, target);
+
+    return binarySearch(nums, pivot + 1, n, target);
 }
 
 function findPivot(nums, low, high) {
@@ -44,9 +50,9 @@ function binarySearch(nums, low, high, key) {
     if (high < low) return -1;
 
     let mid = Math.floor((low + high) / 2);
-    if (key === arr[mid]) return mid;
+    if (key === nums[mid]) return mid;
 
-    if (key > arr[mid]) return binarySearch(nums, mid + 1, high, key);
+    if (key > nums[mid]) return binarySearch(nums, mid + 1, high, key);
 
     return binarySearch(nums, low, mid - 1, key);
 }
